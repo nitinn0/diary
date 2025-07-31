@@ -6,7 +6,7 @@ const User = require("../models/User");
 
 const router = express.Router();
 
-const SECRET = "jwtsecret"; // Use dotenv in production
+const SECRET = process.env.JWT_SECRET || "jwtsecret"; // Use dotenv in production
 
 router.post("/signup", async (req, res) => {
   try {

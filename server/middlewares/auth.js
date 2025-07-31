@@ -1,6 +1,6 @@
 // middleware/auth.js
 const jwt = require("jsonwebtoken");
-const SECRET = "jwtsecret";
+const SECRET = process.env.JWT_SECRET || "jwtsecret";
 
 module.exports = function (req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];

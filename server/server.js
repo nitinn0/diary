@@ -1,13 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/diary-db";
+
 // MongoDB connection with error handling
-mongoose.connect("mongodb+srv://nitinkapoor117:PRAJWa67IbBncLHG@test-db.rwlyl.mongodb.net/diary-db")
+mongoose.connect(MONGODB_URI)
   .then(() => console.log("Connected to MongoDB"))
   .catch(err => console.error("MongoDB connection error:", err));
 
