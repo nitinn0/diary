@@ -127,6 +127,53 @@ const Dashboard = ({ user }) => {
     return aiModels[user.role] || aiModels.free;
   };
 
+  const handleShareNote = (note) => {
+    // Create shareable text
+    const shareText = `📖 Diary Entry\n\n${note.content}\n\nShared from My Diary App`;
+    
+    // Try to use native sharing if available
+    if (navigator.share) {
+      navigator.share({
+        title: 'My Diary Entry',
+        text: shareText,
+        url: window.location.href
+      }).catch(err => {
+        console.log('Share failed:', err);
+        fallbackShare(shareText);
+      });
+    } else {
+      fallbackShare(shareText);
+    }
+  };
+
+  const fallbackShare = (text) => {
+    // Copy to clipboard
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('📋 Note copied to clipboard!');
+      }).catch(() => {
+        // Fallback for older browsers
+        copyToClipboardFallback(text);
+      });
+    } else {
+      copyToClipboardFallback(text);
+    }
+  };
+
+  const copyToClipboardFallback = (text) => {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+      document.execCommand('copy');
+      alert('📋 Note copied to clipboard!');
+    } catch (err) {
+      alert('Failed to copy to clipboard. Please copy manually:\n\n' + text);
+    }
+    document.body.removeChild(textArea);
+  };
+
   return (
     <div className="dashboard">
       <div className="dashboard-header">
@@ -253,6 +300,13 @@ const Dashboard = ({ user }) => {
                     <div className="note-footer">
                       <span className="note-date">{formatDate(note.createdAt)}</span>
                       <div className="note-actions">
+                        <button 
+                          onClick={() => handleShareNote(note)}
+                          className="btn-icon"
+                          title="Share"
+                        >
+                          📤
+                        </button>
                         <button 
                           onClick={() => startEditing(note)}
                           className="btn-icon"
