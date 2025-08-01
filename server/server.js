@@ -7,9 +7,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/diary-db";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://nitinkapoor117:PRAJWa67IbBncLHG@test-db.rwlyl.mongodb.net/diary-db";
+
 
 // MongoDB connection with error handling
+console.log('Connecting to MongoDB at:', MONGODB_URI);
+
 mongoose.connect(MONGODB_URI)
   .then(() => console.log("Connected to MongoDB"))
   .catch(err => console.error("MongoDB connection error:", err));
@@ -17,11 +20,6 @@ mongoose.connect(MONGODB_URI)
 // Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/notes", require("./routes/notes"));
-
-// Health check endpoint
-app.get("/api/health", (req, res) => {
-  res.json({ status: "OK", message: "Diary API is running" });
-});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
